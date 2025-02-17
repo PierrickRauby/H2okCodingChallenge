@@ -4,6 +4,7 @@
 #include <queue>
 #include <string>
 #include <thread>
+#include <mutex>
 
 extern std::mutex plc_queue_mutex;
 class PLC {
