@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../include/sensor_manager.hpp"
+#include "../include/sensor_manager.hpp"  
 #include "../include/sensor.hpp"
 #include "../include/logger.hpp"
 #include <queue>
@@ -20,8 +20,8 @@ TEST(SensorManagerTest, AddSensors) {
     TestSensorManager manager;
     manager.add_sensor('A', 1);
     manager.add_sensor('B', 2);
-    // expecting 2 sensors
-    EXPECT_EQ(manager.get_sensor_count(), 2);
+        // expecting 2 sensors
+    EXPECT_EQ(manager.get_device_count(), 2);
 }
 
 // ** Check that sensors are sending data to the queue**
@@ -33,9 +33,7 @@ TEST(SensorManagerTest, MessageQueueReceivesData) {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     // Check if the queue has received data
-    // {
-        EXPECT_FALSE(manager.get_message_queue().empty());
-    // }
+    EXPECT_FALSE(manager.get_message_queue().empty());
 
     // Stop the sensor manager (which stops all sensors)
     manager.stop();
@@ -49,5 +47,5 @@ TEST(SensorManagerTest, StopManager) {
     // Stop the sensor manager (which stops all sensors)
     manager.stop();
     // Expecting to have cleared all sensors
-    EXPECT_EQ(manager.get_sensor_count(), 0);
+    EXPECT_EQ(manager.get_device_count(), 0);
 }
