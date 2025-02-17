@@ -17,7 +17,7 @@ SensorManager::~SensorManager() {
 }
 
 void SensorManager::add_sensor(char type, int id) {
-    if !running){
+    if(!running){
         // Starting the sensor manager before adding sensors
         start(); 
     }

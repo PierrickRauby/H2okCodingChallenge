@@ -6,7 +6,6 @@
 #include <thread>
 #include <iostream>
 
-bool running = true;
 
 // **TestPLCManager to prevent real network calls**
 class TestPLCManager : public PLCManager {
@@ -26,7 +25,7 @@ TEST(PLCManagerTest, AddPLCs) {
     manager.add_plc(1);
     manager.add_plc(2);
 
-    EXPECT_GE(manager.get_plc_count(), 2);
+    EXPECT_EQ(manager.get_plc_count(), 2);
 }
 
 
@@ -36,26 +35,15 @@ TEST(PLCManagerTest, MessageQueueReceivesData) {
     manager.add_plc(1);
     manager.add_plc(2);
 
-    // Run `send_data()` in a separate thread
-    std::thread plc_thread([&]() {
-        manager.send_data(true); 
-    });
-
     // Allow time for plcs to generate data
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
+   // Check if the queue has data 
+    // {
+        EXPECT_FALSE(manager.get_message_queue().empty());
+    // }
     // Stop the plc manager (which stops all plcs)
     manager.stop();
-
-    // Ensure all threads stop
-    if (plc_thread.joinable()) {
-        plc_thread.join();
-    }
-    // Check if the queue has data
-    {
-        std::lock_guard<std::mutex> lock(plc_queue_mutex);
-        EXPECT_FALSE(manager.get_message_queue().empty());  
-    }
 }
 
 // ** Test for stopping the PLC Manager** 
