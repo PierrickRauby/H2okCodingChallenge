@@ -17,7 +17,7 @@ SensorManager::~SensorManager() {
 }
 
 void SensorManager::add_sensor(char type, int id) {
-    if(!sensor_running){
+    if !running){
         // Starting the sensor manager before adding sensors
         start(); 
     }
@@ -39,7 +39,7 @@ void SensorManager::send_data(bool testing) {
     tcp::socket socket(io_context);
     tcp::resolver resolver(io_context);
     bool connected = false;
-    while (sensor_running) { 
+    while (running) { 
         if (!connected) {
             //** if sensor is running and not (never)connected**
             try {
@@ -50,7 +50,7 @@ void SensorManager::send_data(bool testing) {
                 // and then flush the buffered the data
                 flush_buffer(socket);
             } catch (...) {
-                // try again later 
+                // try again later
                 Logger::log("[ERROR] Connection failed. Retrying...");
                 std::this_thread::sleep_for(std::chrono::seconds(RECONNECT_INTERVAL));
                 continue;
@@ -60,7 +60,7 @@ void SensorManager::send_data(bool testing) {
         if (connected) {
             //**If sensor running and connected */
             try {
-                std::lock_guard<std::mutex> lock(sensor_queue_mutex);
+                std::lock_guard<std::mutex> lock(queue_mutex);
                 if (!message_queue.empty()) {
                     // if data in the queue send it!
                     std::string msg = message_queue.front();
@@ -82,11 +82,12 @@ void SensorManager::send_data(bool testing) {
 
 void SensorManager::flush_buffer(tcp::socket& socket) {
     //Used to send all the message in the sensor_queue to empty it
-    std::lock_guard<std::mutex> lock(sensor_queue_mutex);
+    std::lock_guard<std::mutex> lock(queue_mutex);
         Logger::log("[INFO] flushing queue ...");
     while (!message_queue.empty()) {
-        Logger::log("[SENT] " + message_queue.front());
-        boost::asio::write(socket, boost::asio::buffer(message_queue.front()));
+        std::string msg = message_queue.front();
+        boost::asio::write(socket, boost::asio::buffer(msg));
+        Logger::log("[SENT] " + msg);
         message_queue.pop();
     }
 }
@@ -95,7 +96,7 @@ void SensorManager::reconnect(tcp::socket& socket, tcp::resolver& resolver) {
     //Function used specifically to reconnect to the server and if successful
     // flush the buffer of data stored in the queue
     socket.close();
-    while (sensor_running) { 
+    while (running) { 
         try {
             boost::asio::connect(socket, resolver.resolve(HOST, std::to_string(PORT)));
             Logger::log("[INFO] Reconnected to server.");
@@ -108,31 +109,30 @@ void SensorManager::reconnect(tcp::socket& socket, tcp::resolver& resolver) {
 }
 
 void SensorManager::start() {
-    if (sensor_running) {
+    if (running) {
         Logger::log("[INFO] SensorManager already running.");
         return;
     }
 
-    sensor_running = true;
+    running = true;
     Logger::log("[INFO] SensorManager started.");
 }
 
 void SensorManager::stop() {
     // Stop the sensor manager and all attached sensors
-    if (!sensor_running){
-    Logger::log("[INFO] SensorManager already stopped...");
-
-    }else{
-    Logger::log("[INFO] Stopping SensorManager...");
-    sensor_running = false;
-
+    if (!running) {
+        Logger::log("[INFO] SensorManager already stopped.");
+        return;
     }
+    Logger::log("[INFO] Stopping SensorManager...");
+    running = false;
+
     //Stop all sensors before removing them
     for (auto& sensor : sensors) {
         sensor->stop();
     }
 
-    sensors.clear();  // Now safe to clear the vector
+    sensors.clear();  // Now safe to clear the vector 
     std::cout<<"sensors size: "<<sensors.size()<<std::endl;
 
     Logger::log("[INFO] SensorManager stopped.");

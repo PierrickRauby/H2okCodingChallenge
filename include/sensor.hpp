@@ -1,27 +1,17 @@
 #ifndef SENSOR_HPP
 #define SENSOR_HPP
 
-#include <queue>
-#include <string>
-#include <thread>
-#include <mutex>
+#include "iot_device.hpp"
 
-extern std::mutex queue_mutex;
-class Sensor {
+class Sensor : public IoTDevice {
 public:
     Sensor(char type, int id, std::queue<std::string>& queue);
     ~Sensor();
-    void generate_data();
-    void start();
-    void stop();
+protected:
+    void generate_data() override;
 
 private:
-    char type; //Sensor A or Sensor B
-    int id; //unique ID, retrieve via Config file
-    std::queue<std::string>& message_queue; // data queue for the sensor
-    bool sensor_running=false;
-    std::thread sensor_thread;//data generation thread for that sensor
-
+    char type; //Sensor A or Sensor B 
 };
 
 #endif // SENSOR_HPP
