@@ -1,0 +1,30 @@
+#My typical ci.yml for projects, may need a few changes
+name: Run Tests
+
+on:
+  push:   
+    branches: # both branches 
+      - main
+      - dev
+  pull_request: 
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ cmake make libboost-all-dev libgtest-dev
+
+      - name: Build and Run Tests
+        run: |
+          make clean
+          make test
+          ./bin/run_tests
