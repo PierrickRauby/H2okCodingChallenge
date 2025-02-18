@@ -15,7 +15,7 @@ TEST_DIR = tests
 DATA_RECEIVER_SOURCES = $(SRC_DIR)/data_receiver.cpp  $(SRC_DIR)/logger.cpp 
 SENSOR_SOURCES = $(SRC_DIR)/iot_device.cpp $(SRC_DIR)/sensor.cpp $(SRC_DIR)/device_manager.cpp $(SRC_DIR)/sensor_manager.cpp $(SRC_DIR)/logger.cpp $(SRC_DIR)/config_loader.cpp
 PLC_SOURCES = $(SRC_DIR)/iot_device.cpp $(SRC_DIR)/plc.cpp $(SRC_DIR)/device_manager.cpp $(SRC_DIR)/plc_manager.cpp $(SRC_DIR)/logger.cpp $(SRC_DIR)/config_loader.cpp
-TEST_SOURCES = $(TEST_DIR)/sensor_manager_test.cpp $(TEST_DIR)/plc_manager_test.cpp $(TEST_DIR)/data_receiver_test.cpp $(TEST_DIR)/main.cpp
+TEST_SOURCES = $(TEST_DIR)/system_test.cpp  $(TEST_DIR)/sensor_manager_test.cpp $(TEST_DIR)/plc_manager_test.cpp $(TEST_DIR)/data_receiver_test.cpp $(TEST_DIR)/main.cpp
 
 # Object files
 DATA_RECEIVER_OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(DATA_RECEIVER_SOURCES))
