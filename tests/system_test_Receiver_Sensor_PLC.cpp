@@ -76,33 +76,13 @@ protected:
     }
 };
 
-// // **Test Case 1: Start DataReceiver first, then PLCManager and SensorManager**
-// TEST_F(SystemTest, StartReceiverFirst) {
-//     receiver = new DataReceiver();
-//     receiver_thread = std::thread([this]() { receiver->run(); });
-// 
-//     std::this_thread::sleep_for(std::chrono::seconds(1));  // Allow receiver to start
-// 
-//     sensor_manager = new SensorManager();
-//     plc_manager = new PLCManager();
-// 
-//     sensor_manager->add_sensor('A', 1);
-//     sensor_manager->add_sensor('B', 2);
-//     plc_manager->add_plc(1);
-//     plc_manager->add_plc(2);
-// 
-//     sensor_thread = std::thread([this]() { sensor_manager->send_data(); });
-//     plc_thread = std::thread([this]() { plc_manager->send_data(); });
-// 
-//     std::this_thread::sleep_for(std::chrono::seconds(5));
-// 
-//     verifyLogFile();
-// }
+// **Test Case 1: Start DataReceiver first, then PLCManager and SensorManager**
+TEST_F(SystemTest, StartReceiverFirst) {
+    receiver = new DataReceiver();
+    receiver_thread = std::thread([this]() { receiver->run(); });
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));  // Allow receiver to start
 
-// **Test Case 2: Start SensorManager and PLCManager first, then DataReceiver**
-TEST_F(SystemTest, StartManagersFirst) {
-    // Start SensorManager and PLCManager first**
     sensor_manager = new SensorManager();
     plc_manager = new PLCManager();
 
@@ -113,12 +93,6 @@ TEST_F(SystemTest, StartManagersFirst) {
 
     sensor_thread = std::thread([this]() { sensor_manager->send_data(); });
     plc_thread = std::thread([this]() { plc_manager->send_data(); });
-    // Let the data be generated (and buffered)
-    std::this_thread::sleep_for(std::chrono::seconds(2)); 
-
-    // Now start DataReceiver
-    receiver = new DataReceiver();
-    receiver_thread = std::thread([this]() { receiver->run(); });
 
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
