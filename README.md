@@ -1,5 +1,50 @@
 # H2okCodingChallenge
 
+## Content
+
+- [H2okCodingChallenge](#h2okcodingchallenge)
+  - [Content](#content)
+  - [How to Use](#how-to-use)
+    - [Clone the Repository](#clone-the-repository)
+    - [Build and Test Locally](#build-and-test-locally)
+    - [Dependencies](#dependencies)
+  - [Branch descriptions](#branch-descriptions)
+  - [Challenge Description](#challenge-description)
+
+## How to Use
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/PierrickRauby/H2okCodingChallenge 
+cd CodingPractice
+```
+
+### Build and Test Locally
+
+To build the components use the command below.
+This should resul in 3 Components located in the `/bin` directory:`data_receiver`, `plc_manager`  and `sensor_manager`.
+
+   ```bash
+   make
+   ```
+
+Alternatively, you can build and execute tests:
+  `run_tests` that will test various test cases (unit tests and integration tests).
+
+   ```bash
+   make test
+   ```
+
+### Dependencies
+
+This project uses google tests as well as the boost libraries.
+
+## Branch descriptions
+
+- main: The stable branch containing the latest validated changes to the test and infrastructure.
+- dev: A working branch for testing and development before merging into main.
+
 ## Challenge Description
 
 H2Ok Innovations is developing a Smart Factory System (SFS). The factory in mind has two
