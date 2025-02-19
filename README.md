@@ -1,15 +1,24 @@
 # H2okCodingChallenge
 
-## Content
+<details><summary><h2>Content</h2></summary>
 
 - [H2okCodingChallenge](#h2okcodingchallenge)
-  - [Content](#content)
   - [How to Use](#how-to-use)
     - [Clone the Repository](#clone-the-repository)
     - [Build and Test Locally](#build-and-test-locally)
     - [Dependencies](#dependencies)
+  - [Class Documentation](#class-documentation)
+      - [DataReceiver](#datareceiver)
+      - [DeviceManager](#devicemanager)
+      - [SensorManager](#sensormanager)
+      - [PLCManager](#plcmanager)
+      - [PLC](#plc)
+      - [Sensor](#sensor)
+      - [IoTDevice](#iotdevice)
   - [Branch descriptions](#branch-descriptions)
   - [Challenge Description](#challenge-description)
+</details>
+
 
 ## How to Use
 
@@ -23,7 +32,7 @@ cd CodingPractice
 ### Build and Test Locally
 
 To build the components use the command below.
-This should resul in 3 Components located in the `/bin` directory:`data_receiver`, `plc_manager`  and `sensor_manager`.
+This should result in 3 Components located in the `/bin` directory:`data_receiver`, `plc_manager` and, `sensor_manager`.
 
    ```bash
    make
@@ -39,6 +48,69 @@ Alternatively, you can build and execute tests:
 ### Dependencies
 
 This project uses google tests as well as the boost libraries.
+
+## Class Documentation
+
+<details><summary><h3>Component Level Classes</h3></summary>
+
+#### DataReceiver
+
+The `DataReceiver` class (i.e. Component 3)  responsible for receiving data from sensors and PLCs. It listens on a specified port and handles incoming connections to receive data. The received data is logged in the `data.log` file, ordered by timestamps.
+
+- `void run()`: start the data receiving operations, and start listening for incoming TCP connections
+- `void stop()`: stops data receiving operations and cleans up asio objects
+
+#### DeviceManager
+
+The `DeviceManager` is the base class for the `SensorManager` and the `PLCManager` presented below.
+
+- `send_data(bool testing = false)`: Sends data to the `DataReceiver` and manages disconnection and reconnection.
+- `get_device_count()`: gets the number of sensor from both type associated to the current manager.
+- `get_message_queue()`: gets the data queue to be sent to the receiver.
+
+#### SensorManager
+
+The `SensorManager` class (i.e. Component 1), gets data from the sensors at 1Hz. It retrieves in formation about the number of sensors of Type A and Type B from a configuration file at startup. It also handles deconnection from the `DataReceiver` by buffering the data locally and transmitting it back to the `DataReceiver` once connection is reestablished.
+
+- `add_sensor()`: add a new sensor to the array of sensor pointers and starts it.
+
+Note: the `SensorManager` is derived from the `DeviceManager` class from which it gets most of its functionnalities.
+
+#### PLCManager
+
+The `PLCManager` class (i.e. Component 1), gets data from the plc at 1Hz. It get the information about the number of plcs from a configuration files when started. It also handles deconnection from the `DataReceiver` by buffering the data locally and transmitting it back to the `DataReceiver` once connection is rehestablished.
+
+- `add_plc()`: add a new plc to the array of plc pointers and starts it.
+
+Note: the `PLCManager` is derived from the `DeviceManager` class from which it gets most of its functionnalities.
+</details>
+
+<details><summary><h3>Sensor and PLC level classes</h3></summary>
+
+#### PLC
+
+The `PLC` inherits from the `IOTDevice` class, and only exposes a protected method that generates data specific to PLC devices.
+
+- `generate_data()`: Generates data and places it in the queue of the plc manager.
+
+Note: there is an hardcoded "failure" rate of 3% on PLC data to simulate offline sensors conditions for plcs.
+
+#### Sensor
+
+The `Sensor` inherits from the `IOTDevice` class, and only exposes a protected method that generates data specific to sensor devices of each types.
+
+- `generate_data()`: Generates data and places it in the queue of the sensor manager.
+
+Note: there is an hardcoded "failure" rate of 5% on sensor data to simulate offline sensors conditions for plcs.
+
+#### IoTDevice
+
+The `IoTDevice` is the base class for the `Sensor` and the `PLC`. Manages the process of pushing data to the corresponding device manager.
+
+- `start()`: start the data generation thread for the device.
+- `stop()`: safely stops the data generation for the device.
+</details>
+
 
 ## Branch descriptions
 
