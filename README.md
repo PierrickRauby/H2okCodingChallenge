@@ -1,6 +1,7 @@
 # H2okCodingChallenge
 
-![Status](https://github.com/PierrickRauby/H2okCodingChallenge/actions/workflows/ci.yml/badge.svg)
+![main](https://github.com/PierrickRauby/H2okCodingChallenge/actions/workflows/ci.yml/badge.svg?branch=main)
+![dev](https://github.com/PierrickRauby/H2okCodingChallenge/actions/workflows/ci.yml/badge.svg?branch=dev)
 
 <details><summary><h2>Content</h2></summary>
 
