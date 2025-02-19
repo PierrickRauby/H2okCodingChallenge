@@ -1,5 +1,7 @@
 # H2okCodingChallenge
 
+![Status](https://github.com/PierrickRauby/H2OkEmbeddedChallenge/workflows/ci.yml/badge.svg)
+
 <details><summary><h2>Content</h2></summary>
 
 - [H2okCodingChallenge](#h2okcodingchallenge)
